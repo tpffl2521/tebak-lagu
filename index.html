@@ -3,422 +3,514 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Tebak Lagu — TREASURE & Stray Kids</title>
+<title>Tebak Lagu K-Pop — Versus (Title Tracks + Winner Popup + Custom Names)</title>
 <style>
   :root{
-    --bg: radial-gradient(1200px 800px at 10% 10%, #ffd166 0%, #f72585 40%, transparent 60%),
-          radial-gradient(1000px 700px at 90% 0%, #4cc9f0 0%, transparent 55%),
-          radial-gradient(900px 700px at 50% 100%, #80ed99 0%, transparent 60%),
-          linear-gradient(135deg,#0d0b1e,#1a1034);
-    --card:#ffffff;
-    --ink:#1f2937;
-    --muted:#6b7280;
-    --accent:#7c3aed;
-    --accent-2:#f43f5e;
-    --good:#16a34a;
-    --bad:#ef4444;
-    --chip:#eef2ff;
-    --btn:#111827;
-    --btn-ink:#fff;
+    --bg: radial-gradient(1200px 800px at 0% 0%, #f472b6 0%, transparent 55%),
+          radial-gradient(1100px 760px at 100% 8%, #a78bfa 0%, transparent 55%),
+          radial-gradient(900px 700px at 60% 100%, #fca5a5aa 0%, transparent 60%),
+          linear-gradient(135deg, #2a0a4c, #15051f);
+    --card:#ffffff; --ink:#111827; --muted:#6b7280;
+    --chip:#f5f3ff; --chip-ink:#5b21b6; --ring:#a78bfa;
+    --btn:#3b0764; --btn-ink:#fff;
+    --good:#16a34a; --bad:#ef4444; --soft:#f8fafc; --border:#e5e7eb;
   }
   *{box-sizing:border-box}
-  body{
-    margin:0; color:#fff; min-height:100svh;
-    background:var(--bg); background-attachment: fixed;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
-    display:grid; place-items:center; padding:16px;
-  }
-  .app{
-    width:min(920px,100%); display:grid; gap:14px;
-  }
-  .header{
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    flex-wrap:wrap;
-  }
-  .brand{display:flex; align-items:center; gap:10px}
-  .logo{
-    width:40px; height:40px; border-radius:12px;
-    background: conic-gradient(from 30deg,#f59e0b,#ef4444,#8b5cf6,#22c55e,#06b6d4,#f59e0b);
-    box-shadow:0 8px 30px #00000030;
-  }
-  h1{font-size:clamp(20px,4vw,28px); margin:0}
-  .scorebar{
-    display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-  }
-  .pill{background:#00000030; padding:8px 12px; border-radius:999px; font-weight:600}
-  .btn{
-    border:0; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer;
-    background:var(--btn); color:var(--btn-ink); box-shadow:0 8px 20px #00000030;
-    transition:transform .05s ease;
-  }
-  .btn:active{transform:translateY(1px)}
-  .btn.secondary{background:#ffffff; color:#111827}
-  .btn.ghost{background:#00000020; color:#fff}
-  .card{
-    background:var(--card); color:var(--ink); border-radius:18px; padding:16px;
-    box-shadow:0 12px 40px #0000002a;
-  }
-  .row{display:flex; gap:12px; flex-wrap:wrap}
-  .col{flex:1 1 260px}
-  .section-title{
-    font-weight:800; letter-spacing:.3px; color:#111827; margin:4px 0 10px
-  }
-  /* FILTERS */
+  body{margin:0; color:#fff; min-height:100svh; background:var(--bg) fixed;
+       font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans";
+       display:grid; place-items:start; padding:16px;}
+  .wrap{width:min(1100px,100%); margin:auto; display:grid; gap:14px}
+  .header{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
+  h1{margin:0; font-size:clamp(20px,4vw,28px)}
+  .pill{background:#0000002b; padding:8px 12px; border-radius:999px; font-weight:800}
+  .btn{background:var(--btn); color:var(--btn-ink); border:0; padding:12px 16px; border-radius:12px; font-weight:800; cursor:pointer; box-shadow:0 10px 24px #00000030}
+  .btn.secondary{background:#fff; color:#111827}
+  .btn.ghost{background:#00000025; color:#fff}
+  .btn.small{padding:8px 10px; border-radius:10px; font-weight:700}
+  .card{background:var(--card); color:var(--ink); border-radius:18px; padding:16px; box-shadow:0 14px 40px #0000002a}
+  .row{display:grid; gap:12px}
+  @media(min-width:980px){ .row{grid-template-columns:1.3fr .7fr} }
+  .section-title{font-weight:900; margin:4px 0 10px}
   .filters{display:flex; gap:8px; flex-wrap:wrap}
-  .chip{
-    border:2px solid #0000; background:var(--chip); color:#3730a3;
-    padding:8px 12px; border-radius:999px; font-weight:700; cursor:pointer;
-  }
-  .chip.active{ outline:3px solid #a78bfa; background:#ede9fe; }
-  .hintbox{
-    background:linear-gradient(135deg,#fef3c7,#fce7f3);
-    border:2px dashed #f59e0b; border-radius:16px; padding:14px; margin:6px 0 12px;
-  }
-  .hint-type{font-size:13px; color:#92400e; font-weight:800; text-transform:uppercase; letter-spacing:.5px}
-  .hint{font-size:clamp(18px,4.5vw,24px); margin-top:6px; line-height:1.3}
-  /* OPTIONS */
+  .chip{border:2px solid #0000; background:var(--chip); color:var(--chip-ink); padding:8px 12px; border-radius:999px; font-weight:800; cursor:pointer}
+  .chip.active{outline:3px solid var(--ring); background:#ede9fe}
+  .hintbox{background:linear-gradient(135deg,#fdf2f8,#eef2ff); border:2px dashed #f472b6; border-radius:16px; padding:14px; margin:6px 0 12px}
   .options{display:grid; grid-template-columns:1fr; gap:10px}
   @media(min-width:560px){ .options{grid-template-columns:1fr 1fr} }
-  .opt{
-    background:#f8fafc; border:2px solid #e5e7eb; border-radius:14px; padding:12px;
-    font-weight:700; cursor:pointer; text-align:left;
-  }
+  .opt{background:var(--soft); border:2px solid var(--border); border-radius:14px; padding:12px; font-weight:800; text-align:left; cursor:pointer}
   .opt.correct{border-color:var(--good); background:#ecfdf5}
   .opt.wrong{border-color:var(--bad); background:#fef2f2}
-  .meta{display:flex; gap:8px; flex-wrap:wrap; color:var(--muted); font-size:13px}
-  .progress{
-    height:10px; background:#00000025; border-radius:999px; overflow:hidden
-  }
+  .meta{display:flex; gap:8px; flex-wrap:wrap; color:#6b7280; font-size:13px}
+  .progress{height:10px; background:#00000025; border-radius:999px; overflow:hidden}
   .progress > i{display:block; height:100%; width:0; background:linear-gradient(90deg,#22c55e,#f59e0b,#ef4444)}
-  .footer{display:flex; gap:8px; flex-wrap:wrap; justify-content:space-between; align-items:center}
-  .tiny{font-size:12px; color:#e5e7eb}
+  .players{display:grid; gap:8px}
+  @media(min-width:700px){ .players{grid-template-columns:1fr 1fr} }
+  .pcard{background:#fff; border:2px solid var(--border); border-radius:16px; padding:12px}
+  .pname{font-weight:900}
+  .activeTurn{outline:4px solid #f472b6aa}
+  .hr{height:1px; background:#e5e7eb; margin:10px 0}
   .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#111827; color:#fff; padding:2px 6px; border-radius:6px; font-size:12px}
-  .hidden{display:none !important}
+  /* Editor */
+  .grid{display:grid; gap:10px}
+  .field{display:grid; gap:6px}
+  .field label{font-size:12px; color:#374151; font-weight:800}
+  .input, select, textarea{ width:100%; border:2px solid var(--border); background:#fff; color:#111827; border-radius:12px; padding:10px 12px; font:inherit; outline:none; }
+  .input:focus, select:focus, textarea:focus{border-color:var(--ring); box-shadow:0 0 0 4px #a78bfa33}
+  .input.small{max-width:170px; padding:8px 10px; border-radius:10px}
+  .table{width:100%; border-collapse:collapse}
+  .table th,.table td{border-bottom:1px solid var(--border); padding:8px; text-align:left; font-size:14px}
+  .table th{color:#475569}
+  .scroll{max-height:260px; overflow:auto; border:1px dashed var(--border); border-radius:12px}
+  .badge{background:#f1f5f9; color:#334155; border-radius:999px; padding:2px 8px; font-size:12px; font-weight:800}
+  .tiny{font-size:12px; color:#6b7280}
+  /* ======= Winner Modal ======= */
+  .modal{position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,.5); z-index:50}
+  .modal.show{display:grid}
+  .modal-card{background:#fff; color:#111827; width:min(580px,92vw); border-radius:20px; padding:20px; box-shadow:0 24px 80px rgba(0,0,0,.4); text-align:center}
+  .modal-title{font-size:clamp(20px,3.4vw,28px); font-weight:900; margin:0 0 6px}
+  .modal-sub{color:#6b7280; margin:0 0 12px}
+  .modal-actions{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:12px}
+  /* Confetti canvas */
+  #confettiCanvas{position:fixed; inset:0; pointer-events:none; z-index:60; display:none}
 </style>
 </head>
 <body>
-  <div class="app" id="app">
-    <div class="header">
-      <div class="brand">
-        <div class="logo"></div>
-        <h1>Tebak Lagu — TREASURE & Stray Kids</h1>
-      </div>
-      <div class="scorebar">
-        <span class="pill">Skor: <b id="score">0</b></span>
-        <span class="pill">Streak 🔥: <b id="streak">0</b></span>
-        <span class="pill">High Score: <b id="hiscore">0</b></span>
-        <button class="btn ghost" id="resetHS" title="Reset High Score">Reset HS</button>
-      </div>
+<canvas id="confettiCanvas"></canvas>
+<div class="wrap">
+  <div class="header">
+    <h1>🎵 Tebak Lagu K-Pop — Versus (Title Tracks)</h1>
+    <div style="display:flex; gap:8px; flex-wrap:wrap">
+      <span class="pill">Round: <b id="roundNow">0</b>/<b id="roundMax">10</b></span>
+      <span class="pill">Timer: <b id="timeLeft">—</b></span>
     </div>
-
-    <div class="card">
-      <div class="row">
-        <div class="col">
-          <div class="section-title">Pilih Grup</div>
-          <div class="filters" id="groupFilters">
-            <button class="chip active" data-group="ALL">Semua</button>
-            <button class="chip" data-group="TREASURE">TREASURE</button>
-            <button class="chip" data-group="Stray Kids">Stray Kids</button>
-          </div>
-          <div class="section-title" style="margin-top:12px">Pengaturan</div>
-          <div class="filters">
-            <button class="chip active" id="modeEmoji" title="Clue emoji">Emoji</button>
-            <button class="chip active" id="modeYear" title="Clue tahun rilis">Tahun</button>
-            <button class="chip active" id="modeFact" title="Clue fakta singkat">Fakta</button>
-            <button class="chip" id="modeLyric" title="Potongan lirik ≤10 kata">Lirik</button>
-          </div>
-          <div class="filters" style="margin-top:8px">
-            <button class="chip active" id="timerToggle">Timer: ON</button>
-            <button class="chip" id="hardToggle">Hard: OFF</button>
-          </div>
-          <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
-            <button class="btn" id="startBtn">Mulai / Soal Berikutnya</button>
-            <button class="btn secondary" id="fiftyBtn">🎯 50:50</button>
-            <button class="btn secondary" id="revealBtn">💡 Tampilkan Jawaban</button>
-          </div>
-          <p class="tiny">Tip: tekan <span class="kbd">1</span><span class="kbd">2</span><span class="kbd">3</span><span class="kbd">4</span> untuk memilih opsi.</p>
-        </div>
-
-        <div class="col">
-          <div class="section-title">Clue</div>
-          <div class="hintbox">
-            <div class="hint-type" id="hintType">—</div>
-            <div class="hint" id="hintText">Tekan “Mulai” untuk memulai permainan.</div>
-          </div>
-
-          <div class="section-title">Pilihan Jawaban</div>
-          <div class="options" id="options"></div>
-
-          <div class="meta" style="margin-top:10px">
-            <span>⏱️ Waktu: <b id="timeLeft">—</b></span>
-            <span>•</span>
-            <span id="questionMeta">—</span>
-          </div>
-          <div class="progress" style="margin-top:8px">
-            <i id="progressFill"></i>
-          </div>
-
-          <div class="footer" style="margin-top:12px">
-            <span id="feedback" class="tiny">Selamat bermain!</span>
-            <div style="display:flex; gap:8px">
-              <button class="btn ghost" id="shareBtn">Bagikan Skor</button>
-              <button class="btn ghost" id="againBtn">Ulangi</button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <p class="tiny">Konten game ini menggunakan petunjuk non-audio. Untuk bermain dengan audio snippet, tambahkan file preview Anda sendiri.</p>
   </div>
 
-<script>
-/* ---------- DATA LAGU ---------- */
-const SONGS = [
-  // TREASURE
-  {title:"BOY", group:"TREASURE", year:2020, emoji:"🧒✨🚀", fact:"Debut single TREASURE.", lyric:"I’m your boy (whoa-oh)"},
-  {title:"I LOVE YOU", group:"TREASURE", year:2020, emoji:"❤️😭🌊", fact:"Single kedua 2020.", lyric:"I love you, love you"},
-  {title:"MMM", group:"TREASURE", year:2020, emoji:"🤐🎶🔥", fact:"Juga ditulis “Mmmh”.", lyric:"Mmm, mmm—can you feel"},
-  {title:"JIKJIN", group:"TREASURE", year:2022, emoji:"🏎️💨💥", fact:"Ikonik dengan konsep balap.", lyric:"Jikjin, run it, run it"},
-  {title:"DARARI", group:"TREASURE", year:2022, emoji:"🎵💞🌙", fact:"Viral di platform short.", lyric:"Darari, darari, da"},
-  {title:"HELLO", group:"TREASURE", year:2022, emoji:"👋🌈🎉", fact:"Lagu ceria menyapa dunia.", lyric:"Hello, hello, hello"},
+  <div class="row">
+    <!-- ======== GAME ======== -->
+    <div class="card">
+      <div class="section-title">Pengaturan & Kontrol</div>
+      <div class="filters">
+        <button class="chip active" data-group="ALL" id="gAll">Semua</button>
+        <button class="chip" data-group="TREASURE" id="gTre">TREASURE</button>
+        <button class="chip" data-group="Stray Kids" id="gSkz">Stray Kids</button>
+      </div>
+      <div class="filters" style="margin-top:6px">
+        <span class="chip" id="toggleTimer">⏱️ Timer: <b id="timerState">ON</b></span>
+        <span class="chip" id="minusTime">-5s</span>
+        <span class="chip" id="plusTime">+5s</span>
+        <span class="chip">Durasi: <b id="durShow">20s</b></span>
+        <span class="chip" id="minusRound">-2 round</span>
+        <span class="chip" id="plusRound">+2 round</span>
+        <span class="chip">Match: <b id="roundShow">10</b></span>
+        <span class="chip" id="scoringBtn" title="Ubah skor per jawaban">⚙️ Skor</span>
+      </div>
+      <div class="filters" style="margin-top:8px">
+        <button class="btn" id="startBtn">Mulai / Soal Berikutnya</button>
+        <button class="btn secondary" id="fiftyBtn">🎯 50:50</button>
+        <button class="btn secondary" id="revealBtn">💡 Tampilkan Jawaban</button>
+      </div>
 
-  // Stray Kids
-  {title:"God’s Menu", group:"Stray Kids", year:2020, emoji:"🍳👨‍🍳🔥", fact:"“DU DU DU DU” ikonik.", lyric:"Cookin’ like a chef"},
-  {title:"Back Door", group:"Stray Kids", year:2020, emoji:"🚪↩️🎉", fact:"“You wanna come in?”", lyric:"You wanna come in?"},
-  {title:"Thunderous", group:"Stray Kids", year:2021, emoji:"⚡🥁🐲", fact:"Bersuara lantang, trad-modern.", lyric:"Thunderous, loud loud"},
-  {title:"MANIAC", group:"Stray Kids", year:2022, emoji:"🌀🧠💥", fact:"Hook “MANIAC” meledak.", lyric:"Maniac, going crazy"},
-  {title:"CASE 143", group:"Stray Kids", year:2022, emoji:"🕵️‍♂️💗143", fact:"143 = I LOVE YOU.", lyric:"Case one-four-three"},
-  {title:"S-Class", group:"Stray Kids", year:2023, emoji:"🏆⭐🚦", fact:"Peraih Daesang 2023.", lyric:"It’s a S-Class vibe"},
+      <div class="section-title" style="margin-top:12px">Clue</div>
+      <div class="hintbox">
+        <div style="font-weight:900" id="hintType">—</div>
+        <div style="font-size:clamp(18px,4.5vw,24px); line-height:1.3" id="hintText">Tekan “Mulai” untuk memulai.</div>
+      </div>
+
+      <div class="section-title">Giliran Pemain</div>
+      <div class="players" id="players">
+        <div class="pcard" id="p1">
+          <div class="pname"><span id="p1NameLabel">Pemain 1</span> <span class="title" id="p1Title">—</span></div>
+          <div>Skor: <b id="p1Score">0</b> • Streak: <b id="p1Streak">0</b></div>
+          <div>Akurasi: <b id="p1Acc">0%</b></div>
+        </div>
+        <div class="pcard" id="p2">
+          <div class="pname"><span id="p2NameLabel">Pemain 2</span> <span class="title" id="p2Title">—</span></div>
+          <div>Skor: <b id="p2Score">0</b> • Streak: <b id="p2Streak">0</b></div>
+          <div>Akurasi: <b id="p2Acc">0%</b></div>
+        </div>
+      </div>
+      <!-- Nama editor -->
+      <div class="filters" style="margin-top:8px; align-items:center">
+        <span class="tiny">Nama Pemain:</span>
+        <input id="p1NameInput" class="input small" placeholder="Nama P1" />
+        <input id="p2NameInput" class="input small" placeholder="Nama P2" />
+        <button class="btn small" id="saveNames">Simpan</button>
+      </div>
+
+      <div class="section-title" style="margin-top:12px">Pilihan Jawaban</div>
+      <div class="options" id="options"></div>
+
+      <div class="meta" style="margin-top:10px">
+        <span id="statusText">—</span>
+      </div>
+
+      <div class="progress" style="margin-top:8px">
+        <i id="progressFill"></i>
+      </div>
+
+      <div class="meta" style="margin-top:8px">
+        <span class="tiny">Gunakan <span class="kbd">1</span><span class="kbd">2</span><span class="kbd">3</span><span class="kbd">4</span> untuk cepat pilih jawaban.</span>
+      </div>
+    </div>
+
+    <!-- ======== EDITOR (manual saja) ======== -->
+    <div class="card">
+      <div class="section-title">Editor Lagu (Tambah / Impor / Ekspor)</div>
+      <div class="grid">
+        <div class="field"><label>Judul Lagu</label><input id="fTitle" class="input" placeholder="mis. JIKJIN" /></div>
+        <div class="field"><label>Grup</label><select id="fGroup"><option value="TREASURE">TREASURE</option><option value="Stray Kids">Stray Kids</option><option value="Lainnya">Lainnya</option></select></div>
+        <div class="field"><label>Emoji Hint</label><input id="fEmoji" class="input" placeholder="🧒✨🚀" /></div>
+        <div class="field"><label>Fakta Singkat</label><input id="fFact" class="input" placeholder="Debut single TREASURE." /></div>
+        <div class="field"><label>Potongan Lirik (≤10 kata)</label><input id="fLyric" class="input" placeholder="Jikjin, run it" /></div>
+        <div class="field"><label>Tahun (opsional)</label><input id="fYear" class="input" type="number" min="2000" max="2100" placeholder="2022" /></div>
+        <div class="field"><label>Album/Era</label><input id="fAlbum" class="input" placeholder="mis. THE FIRST STEP: Chapter One" /></div>
+        <div class="filters">
+          <button class="btn" id="addSongBtn">➕ Tambah Lagu</button>
+          <button class="btn secondary" id="exportBtn">⬇️ Ekspor JSON</button>
+          <button class="btn secondary" id="importBtn">⬆️ Impor JSON</button>
+          <button class="btn ghost" id="clearBtn">🗑️ Hapus Custom</button>
+        </div>
+        <div id="importArea" class="field" style="display:none">
+          <label>Tempel JSON Lagu</label>
+          <textarea id="importText" rows="6" class="input" placeholder='[{"title":"...","group":"...","year":2022,"emoji":"...","fact":"...","lyric":"...","album":"..."}]'></textarea>
+          <div class="filters">
+            <button class="btn" id="confirmImportBtn">Impor Sekarang</button>
+            <button class="btn ghost" id="cancelImportBtn">Batal</button>
+          </div>
+        </div>
+        <div class="section-title" style="margin-top:6px">Daftar Lagu Aktif <span class="badge" id="countAll">0</span></div>
+        <div class="scroll">
+          <table class="table" id="songsTable">
+            <thead><tr><th>#</th><th>Judul</th><th>Grup</th><th>Tahun</th><th>Album/Era</th><th>Hapus</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="tiny">Catatan: Data custom tersimpan di browser (localStorage). </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Winner Modal ===== -->
+<div class="modal" id="winnerModal">
+  <div class="modal-card">
+    <h2 class="modal-title" id="winnerText">—</h2>
+    <p class="modal-sub" id="winnerMeta">—</p>
+    <div class="modal-actions">
+      <button class="btn" id="playAgain">Main Lagi</button>
+      <button class="btn ghost" id="closeModal">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== DEFAULT TITLE TRACKS (TREASURE + STRAY KIDS) ===== */
+const DEFAULT_SONGS = [
+  // --- TREASURE ---
+  {title:"BOY", group:"TREASURE", year:2020, album:"THE FIRST STEP: Chapter One", emoji:"🧒✨🚀", fact:"Debut single TREASURE.", lyric:"I'm your boy"},
+  {title:"I LOVE YOU", group:"TREASURE", year:2020, album:"THE FIRST STEP: Chapter Two", emoji:"❤️😭🌊", fact:"Single promosi kedua 2020.", lyric:"I love you, love you"},
+  {title:"MMM", group:"TREASURE", year:2020, album:"THE FIRST STEP: Chapter Three", emoji:"🤐🎶🔥", fact:"Bass-heavy; juga ditulis 'Mmm'.", lyric:"Mmm, can you feel it"},
+  {title:"MY TREASURE", group:"TREASURE", year:2021, album:"THE FIRST STEP: Treasure Effect", emoji:"💎🌈🤍", fact:"Title track album studio pertama.", lyric:"This is my treasure"},
+  {title:"JIKJIN", group:"TREASURE", year:2022, album:"THE SECOND STEP: Chapter One", emoji:"🏎️💨💥", fact:"Konsep balap; 'langsung maju!'.", lyric:"Jikjin, run it"},
+  {title:"HELLO", group:"TREASURE", year:2022, album:"THE SECOND STEP: Chapter Two", emoji:"👋🌈🎉", fact:"Comeback ceria Chapter Two.", lyric:"Hello, hello, hello"},
+  {title:"BONA BONA", group:"TREASURE", year:2023, album:"REBOOT", emoji:"🎺💃🔥", fact:"Lead single dari 'REBOOT'.", lyric:"Bona bona, bona bona"},
+  {title:"KING KONG", group:"TREASURE", year:2024, album:"Single 2024", emoji:"🦍⚙️💥", fact:"Single energik 2024.", lyric:"King Kong in my heart"},
+
+  // --- STRAY KIDS ---
+  {title:"Hellevator", group:"Stray Kids", year:2017, album:"Pre-debut Digital Single", emoji:"🚧⛓️⬆️", fact:"Pre-debut digital single.", lyric:"I'm on a hellevator"},
+  {title:"District 9", group:"Stray Kids", year:2018, album:"I am NOT", emoji:"9️⃣🚫🏙️", fact:"Debut title track.", lyric:"Welcome to District 9"},
+  {title:"My Pace", group:"Stray Kids", year:2018, album:"I am WHO", emoji:"🏃⏱️💪", fact:"Self-empowerment anthem.", lyric:"I run at my pace"},
+  {title:"I am YOU", group:"Stray Kids", year:2018, album:"I am YOU", emoji:"🤝🫶🌙", fact:"Penutup seri 'I am'.", lyric:"I am you, you are me"},
+  {title:"Miroh", group:"Stray Kids", year:2019, album:"Clé 1: Miroh", emoji:"🦁🥁🔥", fact:"Kemenangan musik show pertama.", lyric:"We goin' higher, MIROH"},
+  {title:"Side Effects", group:"Stray Kids", year:2019, album:"Clé 2: Yellow Wood", emoji:"💊🧠⚡", fact:"Eksperimental dengan drop khas.", lyric:"My head hurts"},
+  {title:"Double Knot", group:"Stray Kids", year:2019, album:"Clé: LEVANTER (pre-release)", emoji:"🪢🏃🔥", fact:"Ada versi Inggris.", lyric:"Tie me up, double knot"},
+  {title:"Levanter", group:"Stray Kids", year:2019, album:"Clé: LEVANTER", emoji:"🍃🌬️🌙", fact:"Nuansa lepas & lega.", lyric:"I feel like I'm free"},
+  {title:"God's Menu", group:"Stray Kids", year:2020, album:"GO生 (GO LIVE)", emoji:"🍳👨‍🍳🔥", fact:"Hook 'DU DU DU DU' meledak.", lyric:"Cookin' like a chef"},
+  {title:"Back Door", group:"Stray Kids", year:2020, album:"IN生 (IN LIFE) — Repackage", emoji:"🚪↩️🎉", fact:"Catchphrase legendaris.", lyric:"You wanna come in?"},
+  {title:"Thunderous", group:"Stray Kids", year:2021, album:"NOEASY", emoji:"⚡🥁🐲", fact:"Tradisional bertemu modern.", lyric:"Thunderous, loud loud"},
+  {title:"MANIAC", group:"Stray Kids", year:2022, album:"ODDINARY", emoji:"🌀🧠💥", fact:"Twisting drill hook ikonik.", lyric:"Maniac, going crazy"},
+  {title:"CASE 143", group:"Stray Kids", year:2022, album:"MAXIDENT", emoji:"🕵️‍♂️💗143", fact:"143 = I LOVE YOU.", lyric:"Case one four three"},
+  {title:"S-Class", group:"Stray Kids", year:2023, album:"★★★★★ (5-STAR)", emoji:"🏆⭐🚦", fact:"Era grand prize, 2023.", lyric:"It's a S-Class vibe"},
+  {title:"LALALALA", group:"Stray Kids", year:2023, album:"ROCK-STAR", emoji:"🎺🏟️🎶", fact:"Anthemik, konser vibe.", lyric:"La la la la la"},
+  {title:"Lose My Breath", group:"Stray Kids", year:2024, album:"Single (feat. Charlie Puth)", emoji:"🌬️❤️‍🔥🎤", fact:"Kolaborasi global.", lyric:"I lose my breath"},
+  {title:"Chk Chk Boom", group:"Stray Kids", year:2024, album:"ATE", emoji:"💣✅💥", fact:"Title track 'ATE'.", lyric:"Chk chk boom, boom"}
 ];
 
-/* ---------- STATE ---------- */
-let pool = [...SONGS];
-let current=null, options=[], allowAnswer=false, timer=null, totalTime=20, timeLeft=20;
-let score=0, streak=0, qIndex=0, usedFifty=false;
+const LS_SONGS = "kpop_non_audio_custom_titletracks_v3";
+const LS_NAMES = "kpop_player_names_v1";
 
-/* ---------- UTIL ---------- */
-const el = (id)=>document.getElementById(id);
-const shuffle = (a)=>a.sort(()=>Math.random()-0.5);
-const vibrate = (ms=35)=>{ try{ if(navigator.vibrate) navigator.vibrate(ms);}catch{} };
-const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
-const sample = (arr, n)=>shuffle([...arr]).slice(0,n);
-const hiscoreKey = "kpop_guess_hiscore_v1";
+/* ===== STATE ===== */
+let SONGS=[]; let current=null, options=[], allowAnswer=false, timer=null, totalTime=20, timeLeft=20;
+let round=0, roundMax=10, groupSel="ALL";
+let scores={ p1:{score:0,streak:0,correct:0,total:0,title:"—"}, p2:{score:0,streak:0,correct:0,total:0,title:"—"} };
+let turn="p1", usedFifty=false, baseScore=100, timeBonus=3;
+let names={ p1:"Pemain 1", p2:"Pemain 2" };
 
-/* ---------- RENDER HELPERS ---------- */
-function setHint(song, mode){
+/* ===== HELPERS ===== */
+const el=id=>document.getElementById(id);
+const vibrate=(ms=35)=>{ try{ if(navigator.vibrate) navigator.vibrate(ms);}catch{} };
+const shuffle=a=>a.sort(()=>Math.random()-0.5);
+const sample=(arr,n)=>shuffle([...arr]).slice(0,n);
+const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+function loadCustom(){ try{return JSON.parse(localStorage.getItem(LS_SONGS)||"[]")}catch{return[]} }
+function saveCustom(a){ localStorage.setItem(LS_SONGS, JSON.stringify(a)); }
+function refreshSongs(){ SONGS=[...DEFAULT_SONGS, ...loadCustom()]; renderSongsTable(); }
+function loadNames(){ try{ const n=JSON.parse(localStorage.getItem(LS_NAMES)||"{}"); if(n.p1) names.p1=n.p1; if(n.p2) names.p2=n.p2; }catch{} }
+function saveNames(){ localStorage.setItem(LS_NAMES, JSON.stringify(names)); }
+function applyNameUI(){ el("p1NameLabel").textContent = names.p1; el("p2NameLabel").textContent = names.p2; el("p1NameInput").value = names.p1; el("p2NameInput").value = names.p2; }
+
+/* ===== GAME RENDER/TIMER ===== */
+function setHint(song){
+  const modes=["emoji","year","fact","lyric","album"];
+  const mode=sample(modes,1)[0];
   let type="", text="";
-  if(mode==="emoji"){ type="Emoji Hint"; text=song.emoji; }
-  else if(mode==="year"){ type="Tahun Rilis"; text = `Dirilis tahun <b>${song.year}</b>.`; }
-  else if(mode==="fact"){ type="Fakta Singkat"; text = song.fact; }
-  else if(mode==="lyric"){ type="Potongan Lirik"; text = `<i>“${song.lyric}”</i>`; } // ≤10 kata
-  el("hintType").textContent = type;
-  el("hintText").innerHTML = text;
+  if(mode==="emoji"){ type="Emoji Hint"; text=song.emoji||"🎵"; }
+  else if(mode==="year"){
+    type="Tahun + Era";
+    const era = song.album ? ` — era: <b>${song.album}</b>` : "";
+    text=`Dirilis tahun <b>${song.year||"—"}</b>${era}.`;
+  }
+  else if(mode==="fact"){ type="Fakta Singkat"; text=song.fact||"—"; }
+  else if(mode==="lyric"){ type="Potongan Lirik"; text=`<i>“${song.lyric||"—"}”</i>`; }
+  else if(mode==="album"){ type="Album/Era"; text=song.album ? `<b>${song.album}</b>` : "—"; }
+  el("hintType").textContent=type; el("hintText").innerHTML=text;
 }
-
 function renderOptions(correctTitle){
-  const titles = SONGS.map(s=>s.title);
-  const distractors = sample(titles.filter(t=>t!==correctTitle), 3);
-  options = shuffle([correctTitle, ...distractors]);
-  const cont = el("options");
-  cont.innerHTML = "";
+  const titles=SONGS.map(s=>s.title);
+  const distractors=sample(titles.filter(t=>t!==correctTitle),3);
+  options=shuffle([correctTitle, ...distractors]);
+  const cont=el("options"); cont.innerHTML="";
   options.forEach((t,i)=>{
-    const btn = document.createElement("button");
-    btn.className="opt";
-    btn.dataset.index=i;
-    btn.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; gap:8px">
-      <span>${t}</span>
-      <span class="tiny" style="color:var(--muted)">(${i+1})</span>
-    </div>`;
-    btn.onclick = ()=>pick(i);
-    cont.appendChild(btn);
+    const b=document.createElement("button");
+    b.className="opt"; b.dataset.index=i;
+    b.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${t}</span><span class="tiny" style="color:#64748b">(${i+1})</span></div>`;
+    b.onclick=()=>pick(i); cont.appendChild(b);
   });
 }
-
-function renderMeta(){
-  el("questionMeta").textContent = `${current.group} • ${qIndex+1}`;
+function highlightTurn(){ el("p1").classList.toggle("activeTurn", turn==="p1"); el("p2").classList.toggle("activeTurn", turn==="p2"); el("statusText").textContent=`Giliran: ${turn==="p1"?names.p1:names.p2}.`; }
+function renderScorePanels(){
+  ["p1","p2"].forEach(k=>{
+    el(k+"Score").textContent=scores[k].score;
+    el(k+"Streak").textContent=scores[k].streak;
+    el(k+"Acc").textContent=(scores[k].total?Math.round(100*scores[k].correct/scores[k].total):0)+"%";
+    el(k+"Title").textContent=scores[k].title||"—";
+  });
 }
-
-/* ---------- TIMER ---------- */
+let audioCtx=null;
+function ensureAudio(){
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended") audioCtx.resume();
+  }catch{}
+}
 function startTimer(){
-  clearInterval(timer);
-  timeLeft = totalTime;
-  el("timeLeft").textContent = `${timeLeft}s`;
-  fillProgress();
-  timer = setInterval(()=>{
-    timeLeft--;
-    el("timeLeft").textContent = `${timeLeft}s`;
-    fillProgress();
-    if(timeLeft<=0){ clearInterval(timer); lock(false, "Waktu habis!"); }
-  }, 1000);
+  clearInterval(timer); timeLeft=totalTime; el("timeLeft").textContent=`${timeLeft}s`; fillProgress();
+  timer=setInterval(()=>{ timeLeft--; el("timeLeft").textContent=`${timeLeft}s`; fillProgress(); if(timeLeft<=0){ clearInterval(timer); concludeAnswer(false);} },1000);
 }
-function fillProgress(){
-  const w = (timeLeft/totalTime)*100;
-  el("progressFill").style.width = `${clamp(w,0,100)}%`;
-}
+function fillProgress(){ el("progressFill").style.width=`${clamp((timeLeft/totalTime)*100,0,100)}%`; }
 
-/* ---------- GAME FLOW ---------- */
 function nextQuestion(){
-  allowAnswer=false; usedFifty=false;
-  // Build pool per filter
-  const groupSel = [...document.querySelectorAll('#groupFilters .chip')]
-    .find(ch=>ch.classList.contains('active'))?.dataset.group || "ALL";
-  let candidates = SONGS.filter(s=>{
-    if(groupSel==="ALL") return true;
-    return s.group===groupSel;
-  });
-  if(candidates.length<4) candidates = SONGS;
-
-  current = sample(candidates,1)[0];
-  qIndex++;
-  // Mode
-  const modes = [];
-  if(el("modeEmoji").classList.contains("active")) modes.push("emoji");
-  if(el("modeYear").classList.contains("active")) modes.push("year");
-  if(el("modeFact").classList.contains("active")) modes.push("fact");
-  if(el("modeLyric").classList.contains("active")) modes.push("lyric");
-  const mode = modes.length ? sample(modes,1)[0] : "emoji";
-
-  // Hard mode menambah opsi mirip (judul dari grup sama)
-  let titlesPool = SONGS.map(s=>s.title);
-  if(el("hardToggle").classList.contains("active")){
-    titlesPool = SONGS.filter(s=>s.group===current.group).map(s=>s.title);
-    if(titlesPool.length<4) titlesPool = SONGS.map(s=>s.title);
-  }
-
-  // Render
-  setHint(current, mode);
-  renderOptions(current.title);
-  renderMeta();
-  el("feedback").textContent = "Pilih jawaban yang benar.";
-  allowAnswer=true;
-
-  // Timer
-  if(el("timerToggle").classList.contains("active")){
-    totalTime = 20;
-    startTimer();
-  } else {
-    el("timeLeft").textContent = "—";
-    el("progressFill").style.width = "0%";
-    clearInterval(timer);
-  }
+  if(SONGS.length<4){ alert("Butuh minimal 4 lagu."); return; }
+  if(round>=roundMax){ return endMatch(); }
+  usedFifty=false; allowAnswer=false;
+  let candidates=SONGS.filter(s=> groupSel==="ALL" ? true : s.group===groupSel);
+  if(candidates.length<4) candidates=SONGS;
+  current=sample(candidates,1)[0];
+  round++; el("roundNow").textContent=round; el("roundMax").textContent=roundMax; el("roundShow").textContent=roundMax;
+  setHint(current); renderOptions(current.title); highlightTurn(); allowAnswer=true;
+  if(el("timerState").textContent==="ON"){ startTimer(); } else { el("timeLeft").textContent="—"; el("progressFill").style.width="0%"; }
 }
-
 function pick(i){
-  if(!allowAnswer) return;
-  allowAnswer=false;
-  clearInterval(timer);
-  const correctIdx = options.indexOf(current.title);
-  const nodes = [...document.querySelectorAll('.opt')];
-  nodes.forEach(n=>n.disabled=true);
-
-  if(i===correctIdx){
-    nodes[i].classList.add("correct");
-    score += 100 + (timeLeft*3);
-    streak++; vibrate(30);
-    el("feedback").textContent = `Benar! +${100 + (timeLeft*3)} • ${current.title} — ${current.group}`;
-  } else {
-    nodes[i]?.classList.add("wrong");
-    nodes[correctIdx]?.classList.add("correct");
-    streak = 0; vibrate([25,50,25]);
-    el("feedback").textContent = `Kurang tepat. Jawaban: ${current.title} — ${current.group}`;
-  }
-  el("score").textContent = score;
-  el("streak").textContent = streak;
-
-  // High score
-  const hs = Number(localStorage.getItem(hiscoreKey)||0);
-  if(score>hs){ localStorage.setItem(hiscoreKey, String(score)); }
-
-  // Auto lanjut setelah sedikit jeda
-  setTimeout(()=>{ nextQuestion(); }, 900);
+  if(!allowAnswer) return; allowAnswer=false; clearInterval(timer);
+  const correctIdx=options.indexOf(current.title);
+  const nodes=[...document.querySelectorAll('.opt')]; nodes.forEach(n=>n.disabled=true);
+  if(i===correctIdx){ nodes[i].classList.add("correct"); concludeAnswer(true); } else { nodes[i]?.classList.add("wrong"); nodes[correctIdx]?.classList.add("correct"); concludeAnswer(false); }
+}
+function concludeAnswer(correct){
+  const p=scores[turn]; p.total++; if(correct){ const add=baseScore+(timeLeft*timeBonus); p.score+=add; p.streak++; vibrate(30); el("statusText").textContent=`${turn==="p1"?names.p1:names.p2} benar! +${add} — ${current.title}`; p.correct++; } else { p.streak=0; el("statusText").textContent=`${turn==="p1"?names.p1:names.p2} salah. Jawaban: ${current.title}`; vibrate([25,50,25]); }
+  renderScorePanels(); turn=(turn==="p1")?"p2":"p1"; setTimeout(nextQuestion,900);
 }
 
-/* ---------- LIFELINES ---------- */
-function useFifty(){
-  if(!allowAnswer || usedFifty) return;
-  usedFifty = true;
-  const correctIdx = options.indexOf(current.title);
-  const wrongIdx = options.map((t,i)=>({t,i})).filter(o=>o.i!==correctIdx);
-  const removeTwo = sample(wrongIdx,2);
-  removeTwo.forEach(o=>{
-    const btn = document.querySelector(`.opt[data-index="${o.i}"]`);
-    if(btn){ btn.disabled=true; btn.style.opacity=.6; }
+/* ===== Winner Popup + Sound + Confetti ===== */
+function playWinSound(){
+  ensureAudio(); if(!audioCtx) return;
+  const now = audioCtx.currentTime + 0.02;
+  const notes = [523.25,659.25,783.99,1046.5]; // C5 E5 G5 C6
+  const dur = 0.12;
+  notes.forEach((f,i)=>{
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type="triangle"; osc.frequency.value=f;
+    gain.gain.setValueAtTime(0, now + i*dur);
+    gain.gain.linearRampToValueAtTime(0.6, now + i*dur + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + i*dur + 0.25);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(now + i*dur);
+    osc.stop(now + i*dur + 0.28);
   });
+}
+function launchConfetti(duration=5000){
+  const canvas = el("confettiCanvas");
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  function resize(){ canvas.width = Math.floor(innerWidth*dpr); canvas.height = Math.floor(innerHeight*dpr); canvas.style.width=innerWidth+"px"; canvas.style.height=innerHeight+"px"; }
+  resize(); canvas.style.display="block";
+  const colors = ["#f472b6","#a78bfa","#22d3ee","#facc15","#34d399","#f87171"];
+  const pieces = [];
+  const N = 180;
+  for(let i=0;i<N;i++){
+    pieces.push({
+      x: Math.random()*canvas.width, y: -Math.random()*canvas.height*0.5,
+      w: 6 + Math.random()*8, h: 10 + Math.random()*16,
+      vy: 2 + Math.random()*3, vx: (Math.random()-0.5)*2,
+      rot: Math.random()*Math.PI, vr: (Math.random()-0.5)*0.2,
+      color: colors[Math.floor(Math.random()*colors.length)]
+    });
+  }
+  let start=null, raf;
+  function step(ts){
+    if(!start) start=ts;
+    const elapsed = ts-start;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(const p of pieces){
+      p.x += p.vx*dpr; p.y += p.vy*dpr; p.rot += p.vr;
+      if(p.y - p.h > canvas.height){ p.y = -20; p.x = Math.random()*canvas.width; }
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    }
+    if(elapsed < duration){ raf=requestAnimationFrame(step); }
+    else { canvas.style.display="none"; cancelAnimationFrame(raf); }
+  }
+  raf = requestAnimationFrame(step);
+}
+function showWinnerModal(text, meta){
+  el("winnerText").textContent = text;
+  el("winnerMeta").textContent = meta;
+  el("winnerModal").classList.add("show");
+  launchConfetti(5000);
+  playWinSound();
+}
+function hideWinnerModal(){ el("winnerModal").classList.remove("show"); }
+
+function endMatch(){
+  clearInterval(timer);
+  function titleOf(p){ const acc=p.total?Math.round(100*p.correct/p.total):0;
+    if(p.score>=2000 && acc>=80) return "Maestro K-Pop";
+    if(p.streak>=5) return "Raja Streak";
+    if(acc>=85) return "Raja Ingatan";
+    if(acc<=35) return "Si Lupa Manis";
+    if(p.correct>=1 && p.score<600) return "Pemanasan Dulu";
+    return "Bias Detector"; }
+  scores.p1.title=titleOf(scores.p1); scores.p2.title=titleOf(scores.p2); renderScorePanels();
+  const p1=scores.p1.score, p2=scores.p2.score;
+  let text=""; if(p1>p2){ text=`🏆 Pemenang: ${names.p1} — ${scores.p1.title}`; } else if(p2>p1){ text=`🏆 Pemenang: ${names.p2} — ${scores.p2.title}`; } else { text=`🤝 Seri! ${names.p1} & ${names.p2}`; }
+  const meta=`${names.p1}: ${p1} (Akurasi ${scores.p1.total?Math.round(100*scores.p1.correct/scores.p1.total):0}%) • ${names.p2}: ${p2} (Akurasi ${scores.p2.total?Math.round(100*scores.p2.correct/scores.p2.total):0}%) — ${roundMax} round.`;
+  showWinnerModal(text, meta);
+}
+
+/* Lifeline */
+function useFifty(){
+  if(!allowAnswer || usedFifty) return; usedFifty=true;
+  const correctIdx=options.indexOf(current.title);
+  const wrongIdx=options.map((t,i)=>({t,i})).filter(o=>o.i!==correctIdx);
+  sample(wrongIdx,2).forEach(o=>{ const btn=document.querySelector(`.opt[data-index="${o.i}"]`); if(btn){ btn.disabled=true; btn.style.opacity=.6; } });
   vibrate(20);
 }
 
-/* ---------- SHARE ---------- */
-function shareScore(){
-  const hi = Number(localStorage.getItem(hiscoreKey)||0);
-  const txt = `🎵 Tebak Lagu K-Pop — TREASURE & Stray Kids\nSkor: ${score}\nStreak: ${streak}\nHigh Score: ${hi}\nCoba kalahkan skorku!`;
-  if(navigator.share){
-    navigator.share({title:"Tebak Lagu K-Pop", text:txt}).catch(()=>{});
-  } else {
-    navigator.clipboard.writeText(txt).then(()=>{
-      alert("Teks skor disalin! Tempel di chat kamu.");
+/* Editor Table */
+function renderSongsTable(){
+  const tb=el("songsTable").querySelector("tbody"); tb.innerHTML="";
+  SONGS.forEach((s,idx)=>{
+    const isDefault = idx < DEFAULT_SONGS.length;
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${idx+1}</td><td>${s.title}</td><td><span class="badge">${s.group}</span></td><td>${s.year||"—"}</td><td>${s.album||"—"}</td><td>${isDefault?'<span class="tiny">default</span>':`<button class="btn small ghost" data-del="${idx}">hapus</button>`}</td>`;
+    tb.appendChild(tr);
+  });
+  el("countAll").textContent=SONGS.length;
+  tb.querySelectorAll('button[data-del]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const idx=Number(btn.getAttribute('data-del')); const customs=loadCustom();
+      const customIndex=idx-DEFAULT_SONGS.length; if(customIndex>=0){ customs.splice(customIndex,1); saveCustom(customs); refreshSongs(); }
     });
-  }
+  });
+}
+function validateSong(s){
+  const errs=[]; if(!s.title || s.title.trim().length<2) errs.push("Judul minimal 2 karakter."); if(!s.group) errs.push("Grup wajib.");
+  if(s.year && (s.year<2000 || s.year>2100)) errs.push("Tahun tidak wajar."); if(s.lyric && s.lyric.split(/\s+/).length>10) errs.push("Lirik maks 10 kata.");
+  return {ok:errs.length===0, errs};
+}
+function addSongFromForm(){
+  const s={ title:el("fTitle").value.trim(), group:el("fGroup").value, emoji:el("fEmoji").value.trim()||"🎵", fact:el("fFact").value.trim()||"", lyric:el("fLyric").value.trim()||"", year:Number(el("fYear").value)||undefined, album:el("fAlbum").value.trim()||"" };
+  const v=validateSong(s); if(!v.ok){ alert("Periksa input:\n- "+v.errs.join("\n- ")); return; }
+  const customs=loadCustom();
+  if(customs.some(x=>x.title.toLowerCase()===s.title.toLowerCase() && x.group===s.group)){ if(!confirm("Judul sudah ada. Tambah lagi?")) return; }
+  customs.push(s); saveCustom(customs); refreshSongs();
+  ["fTitle","fEmoji","fFact","fLyric","fYear","fAlbum"].forEach(id=> el(id).value="");
+  alert("Lagu ditambahkan!");
+}
+function exportJSON(){
+  const data=loadCustom(); const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="lagu-kustom.json"; a.click(); URL.revokeObjectURL(url);
+}
+function toggleImportArea(show){ el("importArea").style.display = show ? "block":"none"; if(!show) el("importText").value=""; }
+function importJSON(){
+  const txt=el("importText").value.trim(); if(!txt){ alert("Tempel JSON dulu."); return; }
+  try{ const arr=JSON.parse(txt); if(!Array.isArray(arr)) throw new Error("Format harus array.");
+    const cleaned=[]; arr.forEach(s=>{ const v=validateSong(s); if(v.ok) cleaned.push({title:s.title, group:s.group, emoji:s.emoji||"🎵", fact:s.fact||"", lyric:s.lyric||"", year:s.year?Number(s.year):undefined, album:s.album||""}); });
+    saveCustom(cleaned); refreshSongs(); toggleImportArea(false); alert(`Impor selesai. ${cleaned.length} lagu.`);
+  }catch(e){ alert("JSON tidak valid: "+e.message); }
 }
 
-/* ---------- INIT UI ---------- */
+/* ===== INIT ===== */
 function init(){
-  // High score
-  el("hiscore").textContent = localStorage.getItem(hiscoreKey)||0;
-
-  // Filter toggles
-  document.querySelectorAll('#groupFilters .chip').forEach(ch=>{
-    ch.addEventListener('click', ()=>{
-      document.querySelectorAll('#groupFilters .chip').forEach(x=>x.classList.remove('active'));
-      ch.classList.add('active');
-    });
+  refreshSongs();
+  // names
+  loadNames(); applyNameUI();
+  el("saveNames").addEventListener('click', ()=>{
+    const n1=(el("p1NameInput").value||"").trim()||"Pemain 1";
+    const n2=(el("p2NameInput").value||"").trim()||"Pemain 2";
+    names={p1:n1, p2:n2}; saveNames(); applyNameUI(); highlightTurn(); alert("Nama disimpan!");
   });
 
-  // Mode toggles
-  ["modeEmoji","modeYear","modeFact","modeLyric"].forEach(id=>{
-    el(id).addEventListener('click', e=> e.currentTarget.classList.toggle('active'));
+  // group toggles
+  [el("gAll"), el("gTre"), el("gSkz")].forEach(btn=>{
+    btn.addEventListener('click', ()=>{ [el("gAll"),el("gTre"),el("gSkz")].forEach(x=>x.classList.remove('active')); btn.classList.add('active'); groupSel=btn.dataset.group||"ALL"; });
   });
-
-  // Settings
-  el("timerToggle").addEventListener('click', e=>{
-    e.currentTarget.classList.toggle('active');
-    e.currentTarget.textContent = e.currentTarget.classList.contains('active') ? "Timer: ON" : "Timer: OFF";
-  });
-  el("hardToggle").addEventListener('click', e=>{
-    e.currentTarget.classList.toggle('active');
-    e.currentTarget.textContent = e.currentTarget.classList.contains('active') ? "Hard: ON" : "Hard: OFF";
-  });
-
-  // Buttons
-  el("startBtn").addEventListener('click', nextQuestion);
-  el("againBtn").addEventListener('click', ()=>{
-    score=0; streak=0; qIndex=0; usedFifty=false;
-    el("score").textContent = 0; el("streak").textContent = 0;
-    nextQuestion();
-  });
+  // timer/round controls
+  el("toggleTimer").addEventListener('click', ()=>{ const s=el("timerState"); s.textContent=(s.textContent==="ON"?"OFF":"ON"); });
+  function updateDuration(v){ totalTime=clamp((totalTime||20)+v,5,60); el("durShow").textContent=`${totalTime}s`; }
+  function updateRound(v){ roundMax=clamp((roundMax||10)+v,6,30); el("roundShow").textContent=roundMax; el("roundMax").textContent=roundMax; }
+  el("minusTime").addEventListener('click', ()=>updateDuration(-5));
+  el("plusTime").addEventListener('click', ()=>updateDuration(+5));
+  el("minusRound").addEventListener('click', ()=>updateRound(-2));
+  el("plusRound").addEventListener('click', ()=>updateRound(+2));
+  // scoring config quick edit
+  el("scoringBtn").addEventListener('click', ()=>{ const b=Number(prompt("Skor dasar per jawaban benar? (default 100)", String(100))||100); const t=Number(prompt("Bonus per detik? (default 3)", String(3))||3); if(!isNaN(b)) baseScore=b; if(!isNaN(t)) timeBonus=t; alert(`Skor diatur: base=${baseScore}, bonus/detik=${timeBonus}`); });
+  // buttons
+  el("startBtn").addEventListener('click', ()=>{ ensureAudio(); nextQuestion(); });
   el("fiftyBtn").addEventListener('click', useFifty);
-  el("revealBtn").addEventListener('click', ()=>{
-    if(!current) return;
-    const idx = options.indexOf(current.title);
-    pick(idx);
-  });
-  el("shareBtn").addEventListener('click', shareScore);
-  el("resetHS").addEventListener('click', ()=>{
-    localStorage.setItem(hiscoreKey,"0");
-    el("hiscore").textContent = "0";
-  });
+  el("revealBtn").addEventListener('click', ()=>{ if(!current) return; pick(options.indexOf(current.title)); });
+  el("playAgain").addEventListener('click', ()=>{ hideWinnerModal(); round=0; scores={ p1:{score:0,streak:0,correct:0,total:0,title:"—"}, p2:{score:0,streak:0,correct:0,total:0,title:"—"} }; turn="p1"; renderScorePanels(); nextQuestion(); });
+  el("closeModal").addEventListener('click', hideWinnerModal);
 
-  // Keyboard (1-4)
-  window.addEventListener('keydown', (e)=>{
-    const map={"1":0,"2":1,"3":2,"4":3};
-    if(map[e.key]!==undefined){
-      const btn=document.querySelector(`.opt[data-index="${map[e.key]}"]`);
-      if(btn && !btn.disabled) pick(map[e.key]);
-    }
-  });
+  // editor
+  el("addSongBtn").addEventListener('click', addSongFromForm);
+  el("exportBtn").addEventListener('click', exportJSON);
+  el("importBtn").addEventListener('click', ()=>toggleImportArea(true));
+  el("confirmImportBtn").addEventListener('click', importJSON);
+  el("cancelImportBtn").addEventListener('click', ()=>toggleImportArea(false));
+  el("clearBtn").addEventListener('click', ()=>{ if(confirm("Hapus semua lagu kustom?")){ localStorage.setItem(LS_SONGS,"[]"); refreshSongs(); } });
+
+  // initial UI
+  totalTime=20; roundMax=10; el("durShow").textContent=`${totalTime}s`; el("roundShow").textContent=roundMax; el("roundMax").textContent=roundMax; el("roundNow").textContent=0; el("timerState").textContent="ON";
+  renderScorePanels(); highlightTurn();
+  // pre-warm audio context on first interaction anywhere
+  window.addEventListener('pointerdown', ensureAudio, { once:true });
 }
-
 init();
 </script>
 </body>
